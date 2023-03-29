@@ -1,4 +1,4 @@
-import { createStore } from 'vuex';
+import { createStore } from '@/vuex';
 
 export default createStore({
   state: {
@@ -16,8 +16,8 @@ export default createStore({
   },
   actions: {
     asyncAdd({ commit }, payload) {
+      console.log(commit);
       setTimeout(() => {
-        console.log('payload====', payload);
         commit('add', payload);
       });
     },

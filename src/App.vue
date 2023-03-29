@@ -14,18 +14,18 @@
 
 <script>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useStore } from '@/vuex';
 export default {
   name: 'App',
   setup() {
     const store = useStore();
+    console.log('============', store);
     const add = () => {
       store.commit('add', 1);
     };
     const asyncAdd = () => {
       store.dispatch('asyncAdd', 1);
     };
-    console.log(store);
     return {
       count: computed(() => store.state.count),
       doubleCount: computed(() => store.getters.doubleCount),
