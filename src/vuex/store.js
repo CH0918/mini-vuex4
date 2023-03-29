@@ -7,7 +7,12 @@ function getNestedState(state, path) {
   return path.reduce((state, key) => state[key], state);
 }
 function installModule(store, rootState, path, module) {
+  // 是否是根节点
   const isRoot = !path.length;
+  // 获取命名空间
+  // [bCount,cCount]
+  const namespaced = store._modules.getNamespaced(path);
+  console.log('namespaced = ', namespaced);
   if (!isRoot) {
     let parentState = path
       .slice(0, -1)
@@ -19,13 +24,15 @@ function installModule(store, rootState, path, module) {
   });
 
   module.forEachGetters((getter, key) => {
-    store._wrapperGetter[key] = () => {
-      return getter(getNestedState(module.state, path));
+    store._wrapperGetter[namespaced + key] = () => {
+      return getter(getNestedState(store.state, path));
     };
   });
 
   module.forEachMutations((mutation, key) => {
-    const entry = store._mutations[key] || (store._mutations[key] = []);
+    const entry =
+      store._mutations[namespaced + key] ||
+      (store._mutations[namespaced + key] = []);
     entry.push((payload) => {
       mutation.call(store, getNestedState(store.state, path), payload);
     });
@@ -33,7 +40,9 @@ function installModule(store, rootState, path, module) {
 
   // action 执行完之后会返回一个promise
   module.forEachActions((action, key) => {
-    const entry = store._actions[key] || (store._actions[key] = []);
+    const entry =
+      store._actions[namespaced + key] ||
+      (store._actions[namespaced + key] = []);
     entry.push((payload) => {
       const res = action.call(store, store, payload);
       if (!isPromise(res)) {
@@ -65,18 +74,15 @@ export default class Store {
     store._mutations = Object.create(null);
     store._actions = Object.create(null);
 
-    console.log('modules = ', store._modules);
     // 定义状态
     const state = store._modules.root.state;
     // 把树形结构中的_children里面的state全部拿出来放到root节点下面的state:{aCount: {count:1}, bCount: {count: 1, cCount: {count: 1}}}
     installModule(store, state, [], store._modules.root);
-    console.log('store = ', store);
 
     // state放到store上
     resetStoreModule(store, state);
   }
   get state() {
-    console.log('get state = ', this._state);
     return this._state.data;
   }
   // 这里用箭头函数是因为用户在使用dispatch({commit}, payload)这样解构出来使用

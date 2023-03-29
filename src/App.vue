@@ -15,6 +15,9 @@
     <hr />
     b模块：count：{{ bCount }}
     <button @click="$store.commit('bCount/add', 1)">改b</button>
+    <hr />
+    b模块下的c： {{ cCount }}
+    <button @click="$store.commit('bCount/cCount/add', 1)">改c</button>
   </div>
 </template>
 
@@ -31,7 +34,6 @@ export default {
     const asyncAdd = () => {
       store.dispatch('asyncAdd', 1).then(() => {});
     };
-    console.log('=======app store', store.getters.doubleCount);
     return {
       count: computed(() => store.state.count),
       doubleCount: computed(() => store.getters.doubleCount),
@@ -39,6 +41,7 @@ export default {
       asyncAdd,
       aCount: computed(() => store.state.aCount.count),
       bCount: computed(() => store.state.bCount.count),
+      cCount: computed(() => store.state.bCount.cCount.count),
     };
   },
 };

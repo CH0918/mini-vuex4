@@ -24,4 +24,12 @@ export default class ModuleCollection {
       });
     }
   }
+
+  getNamespaced(path) {
+    let module = this.root;
+    return path.reduce((namespacedKey, key) => {
+      module = module.getChild(key);
+      return namespacedKey + (module.namespaced ? key + '/' : '');
+    }, '');
+  }
 }

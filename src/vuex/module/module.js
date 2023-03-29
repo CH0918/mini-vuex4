@@ -4,6 +4,8 @@ export default class Module {
     this._raw = rawModule;
     this.state = rawModule.state;
     this._children = {};
+    // 模块是否有命名空间
+    this.namespaced = rawModule.namespaced;
   }
   addChild(key, module) {
     this._children[key] = module;
