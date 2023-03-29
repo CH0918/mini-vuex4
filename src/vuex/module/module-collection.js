@@ -6,7 +6,6 @@ export default class ModuleCollection {
     this.register(rootModule, []);
   }
   register(rawModule, path) {
-    console.log('path= ', path);
     const newModule = new Module(rawModule);
     if (path.length === 0) {
       this.root = newModule;

@@ -4,6 +4,8 @@
 
     doubleCount: {{ doubleCount }}
     <hr />
+    <button @click="$store.state.count++">错误修改</button>
+    <hr />
     同步改变值：
     <button @click="add">同步改变+1</button>
     <hr />

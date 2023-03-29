@@ -1,5 +1,7 @@
 import { createStore } from '@/vuex';
 export default createStore({
+  // 开启严格模式，不允许用户直接修改state的值，必须通过commit修改
+  strict: true,
   state: {
     count: 1,
   },
@@ -17,7 +19,6 @@ export default createStore({
     asyncAdd({ commit }, payload) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          console.log('payload====', payload);
           commit('add', payload);
         });
         resolve();
