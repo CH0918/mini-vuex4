@@ -117,6 +117,9 @@ export default class Store {
 
     // state放到store上
     resetStoreModule(store, state);
+
+    // todo: 实现插件系统
+    // todo: 实现动态注册模块功能
   }
   get state() {
     return this._state.data;
