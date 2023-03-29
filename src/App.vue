@@ -9,12 +9,18 @@
     <hr />
     异步改变值：
     <button @click="asyncAdd">异步改变+1</button>
+    <hr />
+    a模块：count： {{ aCount }}
+    <button @click="$store.commit('aCount/add', 1)">改a</button>
+    <hr />
+    b模块：count：{{ bCount }}
+    <button @click="$store.commit('bCount/add', 1)">改b</button>
   </div>
 </template>
 
 <script>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useStore } from '@/vuex';
 export default {
   name: 'App',
   setup() {
@@ -23,14 +29,16 @@ export default {
       store.commit('add', 1);
     };
     const asyncAdd = () => {
-      store.dispatch('asyncAdd', 1);
+      store.dispatch('asyncAdd', 1).then(() => {});
     };
-    console.log(store);
+    console.log('=======app store', store.getters.doubleCount);
     return {
       count: computed(() => store.state.count),
       doubleCount: computed(() => store.getters.doubleCount),
       add,
       asyncAdd,
+      aCount: computed(() => store.state.aCount.count),
+      bCount: computed(() => store.state.bCount.count),
     };
   },
 };

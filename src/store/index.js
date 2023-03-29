@@ -1,5 +1,4 @@
-import { createStore } from 'vuex';
-
+import { createStore } from '@/vuex';
 export default createStore({
   state: {
     count: 1,
@@ -16,11 +15,49 @@ export default createStore({
   },
   actions: {
     asyncAdd({ commit }, payload) {
-      setTimeout(() => {
-        console.log('payload====', payload);
-        commit('add', payload);
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          console.log('payload====', payload);
+          commit('add', payload);
+        });
+        resolve();
       });
     },
   },
-  modules: {},
+  modules: {
+    aCount: {
+      namespaced: true,
+      state: {
+        count: 1,
+      },
+      mutations: {
+        add(state, payload) {
+          state.count += payload;
+        },
+      },
+    },
+    bCount: {
+      namespaced: true,
+      state: {
+        count: 1,
+      },
+      mutations: {
+        add(state, payload) {
+          state.count += payload;
+        },
+      },
+      modules: {
+        cCount: {
+          state: {
+            count: 1,
+          },
+          mutations: {
+            add(state, payload) {
+              state.count += payload;
+            },
+          },
+        },
+      },
+    },
+  },
 });
